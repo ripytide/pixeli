@@ -25,27 +25,40 @@ pub trait Pixel {
     type ColorArray<R>;
 
     /// Converts an owned `Pixel` type to an array of its components.
-    fn components(&self) -> Self::ComponentArray<Self::Component>;
+    fn component_array(&self) -> Self::ComponentArray<Self::Component>;
     /// Converts an owned `Pixel` type to an array of its color components.
-    fn colors(&self) -> Self::ColorArray<Self::Component>;
+    fn color_array(&self) -> Self::ColorArray<Self::Component>;
+    /// Returns the alpha component of the pixel if it has one.
+    fn alpha(&self) -> Option<Self::Component>;
 
-    /// Converts an array of components to a `Pixel`.
-    fn from_components(components: Self::ComponentArray<Self::Component>) -> Self;
+    /// Creates a new instance given an iterator of its components.
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the iterator does not produce enough components for the pixel.
+    fn from_components(components: impl IntoIterator<Item = Self::Component>) -> Self;
+
     /// Create a new instance given an array of its color components and an alpha component.
-    fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, alpha: Self::Component)
-        -> Self;
+    ///
+    /// # Panics
+    ///
+    /// This function will panic if the colors iterator does not produce enough color components for the pixel.
+    fn from_colors_alpha(
+        colors: impl IntoIterator<Item = Self::Component>,
+        alpha: Self::Component,
+    ) -> Self;
 
-    /// Map the pixel to the same outer pixel type with an optionally different inner type.
-    fn map<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
+    /// Maps each of the pixels components with a function `f`.
+    fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
     where
         U: Copy;
 
-    /// Map the pixel to the same outer pixel type with an optionally different inner color component
-    /// type and the exact same alpha component.
+    /// Maps each of the pixels color components with a function `f`.
     fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self;
 
-    /// Map the pixel to the same outer pixel type with an optionally different inner color component
-    /// type and the exact same alpha component.
+    /// Maps the pixels alpha components with a function `f`.
+    ///
+    /// If the pixel has no alpha component then the pixel is returned unchanged.
     fn map_alpha(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self;
 }
 
@@ -63,34 +76,38 @@ macro_rules! implement_pixel_without_alpha {
             type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length];
 
-            fn components(&self) -> Self::ComponentArray<Self::Component> {
+            fn component_array(&self) -> Self::ComponentArray<Self::Component> {
                 [$(self.$bit),*]
             }
-            fn colors(&self) -> Self::ColorArray<Self::Component> {
+            fn color_array(&self) -> Self::ColorArray<Self::Component> {
                 [$(self.$bit),*]
+            }
+            fn alpha(&self) -> Option<Self::Component> {
+                None
             }
 
-            fn from_components(components: Self::ComponentArray<Self::Component>) -> Self {
+            fn from_components(components: impl IntoIterator<Item = Self::Component>) -> Self {
                 let mut iter = components.into_iter();
-
                 Self {$($bit: iter.next().unwrap()),*}
             }
-            fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, _: Self::Component) -> Self {
+            fn from_colors_alpha(
+                colors: impl IntoIterator<Item = Self::Component>,
+                _: Self::Component,
+            ) -> Self {
                 let mut iter = colors.into_iter();
-
                 Self {$($bit: iter.next().unwrap()),*}
             }
 
-            fn map<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
+            fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
             where
                 U: Copy,
             {
-                Self::SelfType::from_components(self.components().map(f))
+                Self::SelfType::from_components(self.component_array().map(f))
             }
 
             fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self
             {
-                self.map(f)
+                self.map_components(f)
             }
 
             fn map_alpha(&self, _: impl FnMut(Self::Component) -> Self::Component) -> Self
@@ -115,39 +132,43 @@ macro_rules! implement_pixel_with_alpha {
             type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length - 1];
 
-            fn components(&self) -> Self::ComponentArray<Self::Component> {
+            fn component_array(&self) -> Self::ComponentArray<Self::Component> {
                 [$(self.$bit),*]
             }
-            fn colors(&self) -> Self::ColorArray<Self::Component> {
+            fn color_array(&self) -> Self::ColorArray<Self::Component> {
                 [$(self.$color_bit),*]
             }
+            fn alpha(&self) -> Option<Self::Component> {
+                Some(self.$alpha_bit)
+            }
 
-            fn from_components(components: Self::ComponentArray<Self::Component>) -> Self {
+            fn from_components(components: impl IntoIterator<Item = Self::Component>) -> Self {
                 let mut iter = components.into_iter();
-
                 Self {$($bit: iter.next().unwrap()),*}
             }
-            fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, alpha: Self::Component) -> Self {
+            fn from_colors_alpha(
+                colors: impl IntoIterator<Item = Self::Component>,
+                alpha: Self::Component,
+            ) -> Self {
                 let mut iter = colors.into_iter();
-
                 Self {$($color_bit: iter.next().unwrap()),*, $alpha_bit: alpha}
             }
 
-            fn map<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
+            fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
             where
                 U: Copy,
             {
-                Self::SelfType::from_components(self.components().map(f))
+                Self::SelfType::from_components(self.component_array().map(f))
             }
 
             fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self
             {
-                Self::SelfType::from_colors_alpha(self.colors().map(f), self.$alpha_bit)
+                Self::SelfType::from_colors_alpha(self.color_array().map(f), self.$alpha_bit)
             }
 
             fn map_alpha(&self, mut f: impl FnMut(Self::Component) -> Self::Component) -> Self
             {
-                Self::SelfType::from_colors_alpha(self.colors(), f(self.$alpha_bit))
+                Self::SelfType::from_colors_alpha(self.color_array(), f(self.$alpha_bit))
             }
         }
     }
