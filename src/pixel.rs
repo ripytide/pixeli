@@ -1,6 +1,11 @@
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///
-/// Usually `T` is a small copiable intrinsic type such as `u8`, `u16` or `f32`.
+/// Pixels can optionally contain a single alpha component.
+///
+/// # Terminology
+///
+/// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`] is a pixel made up
+/// of four components, three color components and one alpha component.
 pub trait Pixel {
     /// The component type of the pixel used for both color and alpha components if any.
     type Component;
@@ -14,18 +19,18 @@ pub trait Pixel {
 
     /// The same pixel type as `Self` but with a different generic component type.
     type SelfType<U>;
-    /// The array form of `Self`
-    type Array<R>;
+    /// The component array form of `Self`
+    type ComponentArray<R>;
     /// The color array form of `Self`
     type ColorArray<R>;
 
     /// Converts an owned `Pixel` type to an array of its components.
-    fn components(&self) -> Self::Array<Self::Component>;
+    fn components(&self) -> Self::ComponentArray<Self::Component>;
     /// Converts an owned `Pixel` type to an array of its color components.
     fn colors(&self) -> Self::ColorArray<Self::Component>;
 
     /// Converts an array of components to a `Pixel`.
-    fn from_components(components: Self::Array<Self::Component>) -> Self;
+    fn from_components(components: Self::ComponentArray<Self::Component>) -> Self;
     /// Create a new instance given an array of its color components and an alpha component.
     fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, alpha: Self::Component)
         -> Self;
@@ -55,17 +60,17 @@ macro_rules! implement_pixel_without_alpha {
             const COMPONENT_COUNT: u8 = $length;
 
             type SelfType<U> = $name<U>;
-            type Array<R> = [R; $length];
+            type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length];
 
-            fn components(&self) -> Self::Array<Self::Component> {
+            fn components(&self) -> Self::ComponentArray<Self::Component> {
                 [$(self.$bit),*]
             }
             fn colors(&self) -> Self::ColorArray<Self::Component> {
                 [$(self.$bit),*]
             }
 
-            fn from_components(components: Self::Array<Self::Component>) -> Self {
+            fn from_components(components: Self::ComponentArray<Self::Component>) -> Self {
                 let mut iter = components.into_iter();
 
                 Self {$($bit: iter.next().unwrap()),*}
@@ -107,17 +112,17 @@ macro_rules! implement_pixel_with_alpha {
             const COMPONENT_COUNT: u8 = $length;
 
             type SelfType<U> = $name<U>;
-            type Array<R> = [R; $length];
+            type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length - 1];
 
-            fn components(&self) -> Self::Array<Self::Component> {
+            fn components(&self) -> Self::ComponentArray<Self::Component> {
                 [$(self.$bit),*]
             }
             fn colors(&self) -> Self::ColorArray<Self::Component> {
                 [$(self.$color_bit),*]
             }
 
-            fn from_components(components: Self::Array<Self::Component>) -> Self {
+            fn from_components(components: Self::ComponentArray<Self::Component>) -> Self {
                 let mut iter = components.into_iter();
 
                 Self {$($bit: iter.next().unwrap()),*}
