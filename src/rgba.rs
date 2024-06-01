@@ -10,5 +10,5 @@ pub struct Rgba<T> {
     /// Blue Component
     pub b: T,
     /// Alpha Component
-    pub a: A,
+    pub a: T,
 }
