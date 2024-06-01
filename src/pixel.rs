@@ -96,46 +96,92 @@ macro_rules! implement_pixel_without_alpha {
     }
 }
 
-// mod rgba {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Rgba, 4, [r, g, b, a]);
-//     implement_heterogeneous_pixel!(Rgba, 3, [r, g, b], a);
-// }
-// mod abgr {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Abgr, 4, [a, b, g, r]);
-//     implement_heterogeneous_pixel!(Abgr, 3, [b, g, r], a);
-// }
-// mod argb {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Argb, 4, [a, r, g, b]);
-//     implement_heterogeneous_pixel!(Argb, 3, [r, g, b], a);
-// }
-// mod bgra {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Bgra, 4, [b, g, r, a]);
-//     implement_heterogeneous_pixel!(Bgra, 3, [b, g, r], a);
-// }
-// mod gray_alpha {
-//     use crate::*;
-//     implement_pixel_without_alpha!(GrayAlpha, 2, [gray, a]);
-//     implement_heterogeneous_pixel!(GrayAlpha, 1, [gray], a);
-// }
-//
-// mod gray {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Gray, 1, [gray]);
-// }
-// mod bgr {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Bgr, 3, [b, g, r]);
-// }
-// mod grb {
-//     use crate::*;
-//     implement_pixel_without_alpha!(Grb, 3, [g, r, b]);
-// }
+macro_rules! implement_pixel_with_alpha {
+    ($name:tt, $length:literal, [$($bit:ident),*], [$($color_bit:ident),*], $alpha_bit:ident) => {
+        impl<T> Pixel for $name<T>
+        where
+            T: Copy,
+        {
+            type Component = T;
+
+            const COMPONENT_COUNT: u8 = $length;
+
+            type SelfType<U> = $name<U>;
+            type Array<R> = [R; $length];
+            type ColorArray<R> = [R; $length - 1];
+
+            fn components(&self) -> Self::Array<Self::Component> {
+                [$(self.$bit),*]
+            }
+            fn colors(&self) -> Self::ColorArray<Self::Component> {
+                [$(self.$color_bit),*]
+            }
+
+            fn from_components(components: Self::Array<Self::Component>) -> Self {
+                let mut iter = components.into_iter();
+
+                Self {$($bit: iter.next().unwrap()),*}
+            }
+            fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, alpha: Self::Component) -> Self {
+                let mut iter = colors.into_iter();
+
+                Self {$($color_bit: iter.next().unwrap()),*, $alpha_bit: alpha}
+            }
+
+            fn map<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
+            where
+                U: Copy,
+            {
+                Self::SelfType::from_components(self.components().map(f))
+            }
+
+            fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self
+            {
+                Self::SelfType::from_colors_alpha(self.colors().map(f), self.$alpha_bit)
+            }
+
+            fn map_alpha(&self, mut f: impl FnMut(Self::Component) -> Self::Component) -> Self
+            {
+                Self::SelfType::from_colors_alpha(self.colors(), f(self.$alpha_bit))
+            }
+        }
+    }
+}
+
+mod rgba {
+    use crate::*;
+    implement_pixel_with_alpha!(Rgba, 4, [r, g, b, a], [r, g, b], a);
+}
+mod abgr {
+    use crate::*;
+    implement_pixel_with_alpha!(Abgr, 4, [a, b, g, r], [b, g, r], a);
+}
+mod argb {
+    use crate::*;
+    implement_pixel_with_alpha!(Argb, 4, [a, r, g, b], [r, g, b], a);
+}
+mod bgra {
+    use crate::*;
+    implement_pixel_with_alpha!(Bgra, 4, [b, g, r, a], [b, g, r], a);
+}
+mod gray_alpha {
+    use crate::*;
+    implement_pixel_with_alpha!(GrayAlpha, 2, [gray, a], [gray], a);
+}
+
+mod gray {
+    use crate::*;
+    implement_pixel_without_alpha!(Gray, 1, [gray]);
+}
+mod bgr {
+    use crate::*;
+    implement_pixel_without_alpha!(Bgr, 3, [b, g, r]);
+}
+mod grb {
+    use crate::*;
+    implement_pixel_without_alpha!(Grb, 3, [g, r, b]);
+}
 mod rgb {
     use crate::*;
-
     implement_pixel_without_alpha!(Rgb, 3, [r, g, b]);
 }
