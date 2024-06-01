@@ -1,0 +1,24 @@
+[package]
+name = "pixeli"
+version = "0.1.0"
+authors = ["James Forster <james.forsterer@gmail.com>"]
+edition = "2021"
+description = """
+This crate provides common pixel types and traits for working with
+them.
+"""
+documentation = "https://docs.rs/pixeli"
+readme = "README.md"
+homepage = "https://github.com/ripytide/pixeli"
+repository = "https://github.com/ripytide/pixeli"
+license = "MIT"
+keywords = ["pixel", "pixels"]
+categories = ["imageprocessing"]
+
+[dependencies]
+
+[features]
+default = []
+
+[lints.rust]
+missing_docs = "deny"
