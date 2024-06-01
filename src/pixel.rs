@@ -4,7 +4,7 @@
 ///
 /// # Terminology
 ///
-/// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`] is a pixel made up
+/// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`](crate::Rgba) is a pixel made up
 /// of four components, three color components and one alpha component.
 pub trait Pixel {
     /// The component type of the pixel used for both color and alpha components if any.
@@ -17,7 +17,7 @@ pub trait Pixel {
     /// have 0.
     const COMPONENT_COUNT: u8;
 
-    /// The same pixel type as `Self` but with a different generic component type.
+    /// The same pixel type as `Self` but with a different component type `U`
     type SelfType<U>;
     /// The component array form of `Self`
     type ComponentArray<R>;
