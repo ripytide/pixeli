@@ -88,14 +88,14 @@ macro_rules! implement_pixel_without_alpha {
 
             fn from_components(components: impl IntoIterator<Item = Self::Component>) -> Self {
                 let mut iter = components.into_iter();
-                Self {$($bit: iter.next().unwrap()),*}
+                Self {$($bit: iter.next().expect("components iterator does not contain enough components for this pixel")),*}
             }
             fn from_colors_alpha(
                 colors: impl IntoIterator<Item = Self::Component>,
                 _: Self::Component,
             ) -> Self {
                 let mut iter = colors.into_iter();
-                Self {$($bit: iter.next().unwrap()),*}
+                Self {$($bit: iter.next().expect("colors iterator does not contain enough components for this pixel")),*}
             }
 
             fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
@@ -144,14 +144,14 @@ macro_rules! implement_pixel_with_alpha {
 
             fn from_components(components: impl IntoIterator<Item = Self::Component>) -> Self {
                 let mut iter = components.into_iter();
-                Self {$($bit: iter.next().unwrap()),*}
+                Self {$($bit: iter.next().expect("components iterator does not contain enough components for this pixel")),*}
             }
             fn from_colors_alpha(
                 colors: impl IntoIterator<Item = Self::Component>,
                 alpha: Self::Component,
             ) -> Self {
                 let mut iter = colors.into_iter();
-                Self {$($color_bit: iter.next().unwrap()),*, $alpha_bit: alpha}
+                Self {$($color_bit: iter.next().expect("colors iterator does not contain enough components for this pixel")),*, $alpha_bit: alpha}
             }
 
             fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
