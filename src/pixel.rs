@@ -2,8 +2,14 @@
 ///
 /// Usually `T` is a small copiable intrinsic type such as `u8`, `u16` or `f32`.
 pub trait Pixel {
+    /// The component type of the pixel used for both color and alpha components if any.
     type Component;
 
+    /// The total number of components in the pixel.
+    ///
+    /// If the pixel contains an alpha components then this number should be equal to the number of
+    /// color components + 1. That is, you cannot have more than 1 alpha components, but you can
+    /// have 0.
     const COMPONENT_COUNT: u8;
 
     /// The same pixel type as `Self` but with a different generic component type.
@@ -31,23 +37,11 @@ pub trait Pixel {
 
     /// Map the pixel to the same outer pixel type with an optionally different inner color component
     /// type and the exact same alpha component.
-    fn map_colors<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
-    where
-        U: Copy;
+    fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self;
 
     /// Map the pixel to the same outer pixel type with an optionally different inner color component
     /// type and the exact same alpha component.
-    fn map_alpha<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
-    where
-        U: Copy;
-}
-
-/// A Pixel with possibly differently typed color and alpha components.
-pub trait HeterogeneousPixel<T, A> {
-    /// The same pixel type as `Self` but with a different generic component types.
-    type SelfType<U, B>;
-    /// The color array form of `Self`
-    type ColorArray<R>;
+    fn map_alpha(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self;
 }
 
 macro_rules! implement_pixel_without_alpha {
@@ -71,17 +65,32 @@ macro_rules! implement_pixel_without_alpha {
                 [$(self.$bit),*]
             }
 
-            fn from_components(components: Self::Array<T>) -> Self {
+            fn from_components(components: Self::Array<Self::Component>) -> Self {
                 let mut iter = components.into_iter();
 
                 Self {$($bit: iter.next().unwrap()),*}
             }
+            fn from_colors_alpha(colors: Self::ColorArray<Self::Component>, _: Self::Component) -> Self {
+                let mut iter = colors.into_iter();
 
-            fn map<U>(&self, f: impl FnMut(T) -> U) -> Self::SelfType<U>
+                Self {$($bit: iter.next().unwrap()),*}
+            }
+
+            fn map<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
             where
                 U: Copy,
             {
                 Self::SelfType::from_components(self.components().map(f))
+            }
+
+            fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self
+            {
+                self.map(f)
+            }
+
+            fn map_alpha(&self, _: impl FnMut(Self::Component) -> Self::Component) -> Self
+            {
+                *self
             }
         }
     }
@@ -127,5 +136,6 @@ macro_rules! implement_pixel_without_alpha {
 // }
 mod rgb {
     use crate::*;
+
     implement_pixel_without_alpha!(Rgb, 3, [r, g, b]);
 }
