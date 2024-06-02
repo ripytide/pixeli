@@ -58,7 +58,6 @@ macro_rules! lossless_with_alpha {
 
 lossless!(Rgb, Rgb);
 lossless!(Rgb, Bgr);
-lossless!(Rgb, Grb);
 lossless_with_alpha!(Rgb, Rgba);
 lossless_with_alpha!(Rgb, Argb);
 lossless_with_alpha!(Rgb, Bgra);
@@ -66,15 +65,13 @@ lossless_with_alpha!(Rgb, Abgr);
 
 lossless!(Bgr, Rgb);
 lossless!(Bgr, Bgr);
-lossless!(Bgr, Grb);
-
-lossless!(Grb, Rgb);
-lossless!(Grb, Bgr);
-lossless!(Grb, Grb);
+lossless_with_alpha!(Bgr, Rgba);
+lossless_with_alpha!(Bgr, Argb);
+lossless_with_alpha!(Bgr, Bgra);
+lossless_with_alpha!(Bgr, Abgr);
 
 lossless!(Rgba, Rgb);
 lossless!(Rgba, Bgr);
-lossless!(Rgba, Grb);
 lossless!(Rgba, Rgba);
 lossless!(Rgba, Argb);
 lossless!(Rgba, Bgra);
@@ -82,7 +79,6 @@ lossless!(Rgba, Abgr);
 
 lossless!(Argb, Rgb);
 lossless!(Argb, Bgr);
-lossless!(Argb, Grb);
 lossless!(Argb, Rgba);
 lossless!(Argb, Argb);
 lossless!(Argb, Bgra);
@@ -90,7 +86,6 @@ lossless!(Argb, Abgr);
 
 lossless!(Bgra, Rgb);
 lossless!(Bgra, Bgr);
-lossless!(Bgra, Grb);
 lossless!(Bgra, Rgba);
 lossless!(Bgra, Argb);
 lossless!(Bgra, Bgra);
@@ -98,7 +93,6 @@ lossless!(Bgra, Abgr);
 
 lossless!(Abgr, Rgb);
 lossless!(Abgr, Bgr);
-lossless!(Abgr, Grb);
 lossless!(Abgr, Rgba);
 lossless!(Abgr, Argb);
 lossless!(Abgr, Bgra);

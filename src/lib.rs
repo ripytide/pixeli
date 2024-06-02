@@ -12,7 +12,6 @@ mod bgr;
 mod bgra;
 mod gray;
 mod gray_alpha;
-mod grb;
 mod rgb;
 mod rgba;
 
@@ -28,7 +27,6 @@ pub use bgr::Bgr;
 pub use bgra::Bgra;
 pub use gray::Gray;
 pub use gray_alpha::GrayAlpha;
-pub use grb::Grb;
 pub use rgb::Rgb;
 pub use rgba::Rgba;
 

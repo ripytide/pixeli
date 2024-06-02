@@ -212,10 +212,6 @@ mod bgr {
     use crate::*;
     implement_pixel_without_alpha!(Bgr, 3, [b, g, r]);
 }
-mod grb {
-    use crate::*;
-    implement_pixel_without_alpha!(Grb, 3, [g, r, b]);
-}
 mod rgb {
     use crate::*;
     implement_pixel_without_alpha!(Rgb, 3, [r, g, b]);

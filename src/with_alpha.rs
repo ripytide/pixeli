@@ -73,7 +73,6 @@ macro_rules! implement_without_no_op {
 
 implement_without_no_op!(Rgb);
 implement_without_no_op!(Bgr);
-implement_without_no_op!(Grb);
 implement_without_no_op!(Gray);
 
 implement_with_no_op!(Rgba);
