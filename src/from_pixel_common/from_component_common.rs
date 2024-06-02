@@ -9,18 +9,54 @@ impl<T> FromComponentCommon<T> for T {
         component
     }
 }
-#[cfg(feature = "libm")]
-impl FromComponentCommon<f32> for u8 {
-    fn from_component_common(float: f32) -> Self {
-        libm::roundf(float.clamp(0.0, 1.0) * f32::from(u8::MAX)) as u8
-    }
+
+macro_rules! float_integer {
+    ($float:ident, $from:ident) => {
+        impl FromComponentCommon<$from> for $float {
+            fn from_component_common(component: $from) -> Self {
+                ((component as $float - $from::MIN as $float)
+                    / ($from::MAX as $float - $from::MIN as $float))
+                    .clamp(0.0, 1.0)
+            }
+        }
+        #[cfg(feature = "libm")]
+        impl FromComponentCommon<$float> for $from {
+            fn from_component_common(component: $float) -> Self {
+                #[allow(unused_imports)]
+                use num_traits::Float;
+
+                (component.clamp(0.0, 1.0)
+                    * $float::from($from::MAX as $float - $from::MIN as $float))
+                .round() as $from
+            }
+        }
+    };
 }
-#[cfg(feature = "libm")]
-impl FromComponentCommon<f32> for u16 {
-    fn from_component_common(float: f32) -> Self {
-        libm::roundf(float.clamp(0.0, 1.0) * f32::from(u16::MAX)) as u16
-    }
-}
+
+float_integer!(f32, u8);
+float_integer!(f32, u16);
+float_integer!(f32, u32);
+float_integer!(f32, u64);
+float_integer!(f32, u128);
+float_integer!(f32, i8);
+float_integer!(f32, i16);
+float_integer!(f32, i32);
+float_integer!(f32, i64);
+float_integer!(f32, i128);
+float_integer!(f32, usize);
+
+float_integer!(f64, u8);
+float_integer!(f64, u16);
+float_integer!(f64, u32);
+float_integer!(f64, u64);
+float_integer!(f64, u128);
+float_integer!(f64, i8);
+float_integer!(f64, i16);
+float_integer!(f64, i32);
+float_integer!(f64, i64);
+float_integer!(f64, i128);
+float_integer!(f64, usize);
+
 impl FromComponentCommon<u16> for u8 {
     fn from_component_common(c16: u16) -> Self {
         // The input c is the numerator of `c / u16::MAX`.
@@ -30,16 +66,6 @@ impl FromComponentCommon<u16> for u8 {
         // exhaustively in Python. It's the same as the reference function:
         //  round(c * (2**8 - 1) / (2**16 - 1))
         ((u32::from(c16) + 128) / 257) as u8
-    }
-}
-impl FromComponentCommon<u16> for f32 {
-    fn from_component_common(int: u16) -> Self {
-        (f32::from(int) / f32::from(u16::MAX)).clamp(0.0, 1.0)
-    }
-}
-impl FromComponentCommon<u8> for f32 {
-    fn from_component_common(int: u8) -> Self {
-        (f32::from(int) / f32::from(u8::MAX)).clamp(0.0, 1.0)
     }
 }
 impl FromComponentCommon<u8> for u16 {

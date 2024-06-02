@@ -17,7 +17,7 @@ mod to_rgb;
 /// - Integers are considered to range between `MIN..=MAX`;
 ///
 /// This trait can convert from any of the pixel types in this crate with a primitive generic
-/// component to any other pixel type in this crate with any other generic component type.
+/// component to any other pixel type in this crate with any other primitive generic component type.
 ///
 /// # Examples
 /// ```
@@ -25,8 +25,8 @@ mod to_rgb;
 ///
 /// let _: Rgb<i32> = Rgb::from_pixel_common(Gray::<u8> { gray: 100 });
 /// let _: Rgba<f32> = Rgba::from_pixel_common(Gray::<i8> { gray: 100 });
-/// let _: GrayAlpha<u8> = GrayAlpha::from_pixel_common(Bgr::<f32> {b: 0.3, g: 0.6, r: 0.9});
-/// let _: Gray<i8> = Gray::from_pixel_common(Rgba::<f64> {r: 0.4, g: 0.7, b: 0.7, a: 0.5});
+/// let _: GrayAlpha<u8> = GrayAlpha::from_pixel_common(Bgr::<f32> { b: 0.3, g: 0.6, r: 0.9 });
+/// let _: Gray<i8> = Gray::from_pixel_common(Rgba::<f64> { r: 0.4, g: 0.7, b: 0.7, a: 0.5 });
 /// ```
 pub trait FromPixelCommon<P> {
     /// Converts the given pixel type to the `Self` type.
