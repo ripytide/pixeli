@@ -2,11 +2,13 @@ use num_traits::NumCast;
 
 use crate::*;
 
-/// An Enlargable::Larger value should be enough to calculate
+/// An `Enlargable::Larger` value should be enough to calculate
 /// the sum (average) of a few hundred or thousand Enlargeable values.
 pub trait Enlargeable: PixelComponent {
+    /// The larger type
     type Larger: PixelComponent;
 
+    /// Clamps back into `Self` from `Self::Larger`
     fn clamp_from(n: Self::Larger) -> Self {
         if n > Self::COMPONENT_MAX.to_larger() {
             Self::COMPONENT_MAX
@@ -17,6 +19,7 @@ pub trait Enlargeable: PixelComponent {
         }
     }
 
+    /// Converts `self` to the `Self::Larger` type
     fn to_larger(self) -> Self::Larger {
         NumCast::from(self).unwrap()
     }

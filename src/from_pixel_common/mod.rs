@@ -5,7 +5,7 @@ use self::{
     to_rgb::ToRgb,
 };
 
-mod enlargeable;
+pub mod enlargeable;
 mod from_component_common;
 mod to_gray;
 mod to_rgb;

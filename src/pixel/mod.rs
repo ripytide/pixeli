@@ -1,7 +1,7 @@
 use self::pixel_component::PixelComponent;
 
-pub mod pixel_component;
 pub mod contiguous_pixel;
+pub mod pixel_component;
 
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///
@@ -23,7 +23,7 @@ pub trait Pixel: Copy {
     const COMPONENT_COUNT: u8;
 
     /// The same pixel type as `Self` but with a different component type `U`
-    type SelfType<U>;
+    type SelfType<U: PixelComponent>: Pixel<Component = U, SelfType<Self::Component> = Self>;
     /// The component array form of `Self`
     type ComponentArray<R>;
     /// The color array form of `Self`
@@ -77,7 +77,7 @@ macro_rules! implement_pixel_without_alpha {
 
             const COMPONENT_COUNT: u8 = $length;
 
-            type SelfType<U> = $name<U>;
+            type SelfType<U: PixelComponent> = $name<U>;
             type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length];
 
@@ -133,7 +133,7 @@ macro_rules! implement_pixel_with_alpha {
 
             const COMPONENT_COUNT: u8 = $length;
 
-            type SelfType<U> = $name<U>;
+            type SelfType<U: PixelComponent> = $name<U>;
             type ComponentArray<R> = [R; $length];
             type ColorArray<R> = [R; $length - 1];
 
