@@ -2,9 +2,9 @@ use crate::*;
 
 macro_rules! implement_from {
     ($from_type:ident, $self_type:ident, {$($bit:ident),*}) => {
-        impl<T> From<$from_type<T>> for $self_type<T> {
-            fn from(value: $from_type<T>) -> Self {
-                Self{$($bit: value.$bit),*}
+        impl<R, S> From<$from_type<R>> for $self_type<S> where R: Into<S> {
+            fn from(value: $from_type<R>) -> Self {
+                Self{$($bit: value.$bit.into()),*}
             }
         }
     };

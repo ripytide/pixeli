@@ -1,14 +1,22 @@
 use crate::*;
 
-trait WithAlpha: Pixel {
-    type WithAlpha;
+/// A pixel which can gain an alpha component.
+pub trait WithAlpha: Pixel {
+    /// The pixel type with its alpha component.
+    type WithAlpha: Pixel;
 
-    fn with_alpha(pixel: Self) -> Self::WithAlpha;
+    /// Returns the pixel type with its alpha component. If no alpha component is already contained
+    /// then it is set to the maximum using the [`Bounded`](num_traits::Bounded) super-trait of
+    /// [`PixelComponent`].
+    fn with_alpha(self) -> Self::WithAlpha;
 }
-trait WithoutAlpha: Pixel {
-    type WithoutAlpha;
+/// A pixel which can lose its alpha component.
+pub trait WithoutAlpha: Pixel {
+    /// The pixel type without its alpha component.
+    type WithoutAlpha: Pixel;
 
-    fn without_alpha(pixel: Self) -> Self::WithoutAlpha;
+    /// Returns the pixel type without its alpha component.
+    fn without_alpha(self) -> Self::WithoutAlpha;
 }
 
 macro_rules! implement_lower_upper {
@@ -16,9 +24,9 @@ macro_rules! implement_lower_upper {
         impl<T> WithAlpha for $lower<T> where T: PixelComponent {
             type WithAlpha = $upper<T>;
 
-            fn with_alpha(pixel: Self) -> Self::WithAlpha {
+            fn with_alpha(self) -> Self::WithAlpha {
                 $upper {
-                    $($bit: pixel.$bit),*,
+                    $($bit: self.$bit),*,
                     a: <$lower<T> as Pixel>::Component::max_value(),
                 }
             }
@@ -26,9 +34,9 @@ macro_rules! implement_lower_upper {
         impl<T> WithoutAlpha for $upper<T> where T: PixelComponent {
             type WithoutAlpha = $lower<T>;
 
-            fn without_alpha(pixel: Self) -> Self::WithoutAlpha {
+            fn without_alpha(self) -> Self::WithoutAlpha {
                 $lower {
-                    $($bit: pixel.$bit),*,
+                    $($bit: self.$bit),*,
                 }
             }
         }
@@ -42,8 +50,8 @@ macro_rules! implement_with_no_op {
         {
             type WithAlpha = $original<T>;
 
-            fn with_alpha(pixel: Self) -> Self::WithAlpha {
-                pixel
+            fn with_alpha(self) -> Self::WithAlpha {
+                self
             }
         }
     };
@@ -56,8 +64,8 @@ macro_rules! implement_without_no_op {
         {
             type WithoutAlpha = $original<T>;
 
-            fn without_alpha(pixel: Self) -> Self::WithoutAlpha {
-                pixel
+            fn without_alpha(self) -> Self::WithoutAlpha {
+                self
             }
         }
     };
