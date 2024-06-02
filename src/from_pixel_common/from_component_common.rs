@@ -19,7 +19,6 @@ macro_rules! float_integer {
                     .clamp(0.0, 1.0)
             }
         }
-        #[cfg(feature = "libm")]
         impl FromComponentCommon<$float> for $from {
             fn from_component_common(component: $float) -> Self {
                 #[allow(unused_imports)]
