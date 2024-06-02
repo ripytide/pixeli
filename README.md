@@ -1,3 +1,4 @@
 # Pixeli
 
-A collection of pixel types and a [`Pixel`] trait for using them generically.
+This crate provides common pixel types and traits for working with
+them.
