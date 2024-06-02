@@ -57,6 +57,7 @@ float_integer!(f32, i32);
 float_integer!(f32, i64);
 float_integer!(f32, i128);
 float_integer!(f32, usize);
+float_integer!(f32, isize);
 
 float_integer!(f64, u8);
 float_integer!(f64, u16);
@@ -69,6 +70,7 @@ float_integer!(f64, i32);
 float_integer!(f64, i64);
 float_integer!(f64, i128);
 float_integer!(f64, usize);
+float_integer!(f64, isize);
 
 integer_integer!(u8, u16);
 integer_integer!(u8, u32);
@@ -80,6 +82,7 @@ integer_integer!(u8, i32);
 integer_integer!(u8, i64);
 integer_integer!(u8, i128);
 integer_integer!(u8, usize);
+integer_integer!(u8, isize);
 
 integer_integer!(u16, u32);
 integer_integer!(u16, u64);
@@ -90,6 +93,7 @@ integer_integer!(u16, i32);
 integer_integer!(u16, i64);
 integer_integer!(u16, i128);
 integer_integer!(u16, usize);
+integer_integer!(u16, isize);
 
 integer_integer!(u32, u64);
 integer_integer!(u32, u128);
@@ -99,6 +103,7 @@ integer_integer!(u32, i32);
 integer_integer!(u32, i64);
 integer_integer!(u32, i128);
 integer_integer!(u32, usize);
+integer_integer!(u32, isize);
 
 integer_integer!(u64, u128);
 integer_integer!(u64, i8);
@@ -107,6 +112,7 @@ integer_integer!(u64, i32);
 integer_integer!(u64, i64);
 integer_integer!(u64, i128);
 integer_integer!(u64, usize);
+integer_integer!(u64, isize);
 
 integer_integer!(u128, i8);
 integer_integer!(u128, i16);
@@ -114,23 +120,31 @@ integer_integer!(u128, i32);
 integer_integer!(u128, i64);
 integer_integer!(u128, i128);
 integer_integer!(u128, usize);
+integer_integer!(u128, isize);
 
 integer_integer!(i8, i16);
 integer_integer!(i8, i32);
 integer_integer!(i8, i64);
 integer_integer!(i8, i128);
 integer_integer!(i8, usize);
+integer_integer!(i8, isize);
 
 integer_integer!(i16, i32);
 integer_integer!(i16, i64);
 integer_integer!(i16, i128);
 integer_integer!(i16, usize);
+integer_integer!(i16, isize);
 
 integer_integer!(i32, i64);
 integer_integer!(i32, i128);
 integer_integer!(i32, usize);
+integer_integer!(i32, isize);
 
 integer_integer!(i64, i128);
 integer_integer!(i64, usize);
+integer_integer!(i64, isize);
 
 integer_integer!(i128, usize);
+integer_integer!(i128, isize);
+
+integer_integer!(usize, isize);

@@ -8,10 +8,10 @@ pub trait Enlargeable: PixelComponent {
     type Larger: PixelComponent;
 
     fn clamp_from(n: Self::Larger) -> Self {
-        if n > Self::max_value().to_larger() {
-            Self::max_value()
-        } else if n < Self::min_value().to_larger() {
-            Self::min_value()
+        if n > Self::COMPONENT_MAX.to_larger() {
+            Self::COMPONENT_MAX
+        } else if n < Self::COMPONENT_MIN.to_larger() {
+            Self::COMPONENT_MIN
         } else {
             NumCast::from(n).unwrap()
         }

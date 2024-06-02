@@ -6,7 +6,7 @@ pub trait WithAlpha: Pixel {
     type WithAlpha: Pixel;
 
     /// Returns the pixel type with its alpha component. If no alpha component is already contained
-    /// then it is set to the maximum using the [`Bounded`](num_traits::Bounded) super-trait of
+    /// then it is set to the maximum value.
     /// [`PixelComponent`].
     fn with_alpha(self) -> Self::WithAlpha;
 }
@@ -27,7 +27,7 @@ macro_rules! implement_lower_upper {
             fn with_alpha(self) -> Self::WithAlpha {
                 $upper {
                     $($bit: self.$bit),*,
-                    a: <$lower<T> as Pixel>::Component::max_value(),
+                    a: <$lower<T> as Pixel>::Component::COMPONENT_MAX,
                 }
             }
         }

@@ -13,8 +13,10 @@ mod to_rgb;
 /// Convert between pixel types using the most common conversion method, this conversion can be
 /// lossy, such as from [`Rgb`] to [`Gray`].
 ///
-/// - Floats are considered to range between `0.0..=1.0`;
-/// - Integers are considered to range between `MIN..=MAX`;
+/// - Floats are considered to range between `0.0..=1.0`
+/// - Integers are considered to range between `MIN..=MAX`
+/// - If gaining an alpha component it set to the maximum value of the above range
+/// - If retaining an alpha component it stays at the save value
 ///
 /// This trait can convert from any of the pixel types in this crate with a primitive generic
 /// component to any other pixel type in this crate with any other primitive generic component type.
