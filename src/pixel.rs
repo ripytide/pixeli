@@ -1,9 +1,11 @@
+use num_traits::Bounded;
+
 /// A trait for all the required super-traits for a pixel component type.
 ///
 /// It has a blanket implementation so you just need to make sure your type implements the
 /// super-traits.
-pub trait PixelComponent: Copy {}
-impl<T> PixelComponent for T where T: Copy {}
+pub trait PixelComponent: Copy + Bounded {}
+impl<T> PixelComponent for T where T: Copy + Bounded {}
 
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///
@@ -13,7 +15,7 @@ impl<T> PixelComponent for T where T: Copy {}
 ///
 /// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`](crate::Rgba) is a pixel made up
 /// of four components, three color components and one alpha component.
-pub trait Pixel: PixelComponent {
+pub trait Pixel {
     /// The component type of the pixel used for both color and alpha components if any.
     type Component: PixelComponent;
 
@@ -58,7 +60,7 @@ pub trait Pixel: PixelComponent {
     /// Maps each of the pixels components with a function `f`.
     fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
     where
-        U: Copy;
+        U: PixelComponent;
 
     /// Maps each of the pixels color components with a function `f`.
     fn map_colors(&self, f: impl FnMut(Self::Component) -> Self::Component) -> Self;
@@ -73,7 +75,7 @@ macro_rules! implement_pixel_without_alpha {
     ($name:ident, $length:literal, [$($bit:ident),*]) => {
         impl<T> Pixel for $name<T>
         where
-            T: Copy,
+            T: PixelComponent,
         {
             type Component = T;
 
@@ -107,7 +109,7 @@ macro_rules! implement_pixel_without_alpha {
 
             fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
             where
-                U: Copy,
+                U: PixelComponent,
             {
                 Self::SelfType::from_components(self.component_array().map(f))
             }
@@ -129,7 +131,7 @@ macro_rules! implement_pixel_with_alpha {
     ($name:tt, $length:literal, [$($bit:ident),*], [$($color_bit:ident),*], $alpha_bit:ident) => {
         impl<T> Pixel for $name<T>
         where
-            T: Copy,
+            T: PixelComponent,
         {
             type Component = T;
 
@@ -163,7 +165,7 @@ macro_rules! implement_pixel_with_alpha {
 
             fn map_components<U>(&self, f: impl FnMut(Self::Component) -> U) -> Self::SelfType<U>
             where
-                U: Copy,
+                U: PixelComponent,
             {
                 Self::SelfType::from_components(self.component_array().map(f))
             }

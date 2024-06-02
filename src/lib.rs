@@ -16,8 +16,10 @@ mod grb;
 mod rgb;
 mod rgba;
 
-mod conversions;
+mod from_pixel_common;
 mod from;
+mod from_component_common;
+mod with_alpha;
 mod pixel;
 
 pub use abgr::Abgr;
@@ -30,5 +32,6 @@ pub use grb::Grb;
 pub use rgb::Rgb;
 pub use rgba::Rgba;
 
-pub use conversions::FromComponentCommon;
+pub use from_pixel_common::FromPixelCommon;
+pub use from_component_common::FromComponentCommon;
 pub use pixel::{Pixel, PixelComponent};

@@ -16,14 +16,16 @@ keywords = ["pixel", "pixels"]
 categories = ["imageprocessing"]
 
 [dependencies]
+num-traits = { version = "0.2.19", default-features = false }
 serde = { version = "1.0", optional = true, default-features = false, features = [
 	"derive",
 ] }
-libm = { version = "0.2.8", optional = true }
+libm = { version = "0.2.8", optional = true, default-features = false }
 
 [features]
 default = ["libm"]
 serde = ["dep:serde"]
+libm = ["dep:libm"]
 
 [lints.rust]
 missing_docs = "deny"
