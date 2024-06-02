@@ -1,3 +1,10 @@
+/// A trait for all the required super-traits for a pixel component type.
+///
+/// It has a blanket implementation so you just need to make sure your type implements the
+/// super-traits.
+pub trait PixelComponent: Copy {}
+impl<T> PixelComponent for T where T: Copy {}
+
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///
 /// Pixels can optionally contain a single alpha component.
@@ -6,9 +13,9 @@
 ///
 /// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`](crate::Rgba) is a pixel made up
 /// of four components, three color components and one alpha component.
-pub trait Pixel {
+pub trait Pixel: PixelComponent {
     /// The component type of the pixel used for both color and alpha components if any.
-    type Component;
+    type Component: PixelComponent;
 
     /// The total number of components in the pixel.
     ///

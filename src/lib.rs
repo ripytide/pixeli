@@ -2,10 +2,9 @@
 #![doc(html_logo_url = "https://kornel.ski/rgb-logo.png")]
 #![warn(missing_docs)]
 #![no_std]
-// std is required to run unit tests
-#[cfg(test)]
-#[macro_use]
-extern crate std;
+
+#[cfg(feature = "libm")]
+extern crate libm;
 
 mod abgr;
 mod argb;
@@ -17,6 +16,8 @@ mod grb;
 mod rgb;
 mod rgba;
 
+mod conversions;
+mod from;
 mod pixel;
 
 pub use abgr::Abgr;
@@ -29,4 +30,5 @@ pub use grb::Grb;
 pub use rgb::Rgb;
 pub use rgba::Rgba;
 
-pub use pixel::Pixel;
+pub use conversions::FromComponentCommon;
+pub use pixel::{Pixel, PixelComponent};
