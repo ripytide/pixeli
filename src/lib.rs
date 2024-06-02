@@ -3,9 +3,6 @@
 #![warn(missing_docs)]
 #![no_std]
 
-#[cfg(feature = "libm")]
-extern crate libm;
-
 mod abgr;
 mod argb;
 mod bgr;
