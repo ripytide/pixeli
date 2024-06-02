@@ -1,6 +1,7 @@
 use self::pixel_component::PixelComponent;
 
 pub mod pixel_component;
+pub mod contiguous_pixel;
 
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///

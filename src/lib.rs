@@ -32,5 +32,5 @@ pub use rgba::Rgba;
 
 #[cfg(feature = "libm")]
 pub use from_pixel_common::FromPixelCommon;
-pub use pixel::{pixel_component::PixelComponent, Pixel};
+pub use pixel::{contiguous_pixel::ContiguousPixel, pixel_component::PixelComponent, Pixel};
 pub use with_alpha::{WithAlpha, WithoutAlpha};
