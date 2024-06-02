@@ -12,13 +12,13 @@ impl<T> FromComponentCommon<T> for T {
 #[cfg(feature = "libm")]
 impl FromComponentCommon<f32> for u8 {
     fn from_component_common(float: f32) -> Self {
-        libm::roundf(float.clamp(0.0, 1.0) * u8::MAX as f32) as u8
+        libm::roundf(float.clamp(0.0, 1.0) * f32::from(u8::MAX)) as u8
     }
 }
 #[cfg(feature = "libm")]
 impl FromComponentCommon<f32> for u16 {
     fn from_component_common(float: f32) -> Self {
-        libm::roundf(float.clamp(0.0, 1.0) * u16::MAX as f32) as u16
+        libm::roundf(float.clamp(0.0, 1.0) * f32::from(u16::MAX)) as u16
     }
 }
 impl FromComponentCommon<u16> for u8 {
@@ -34,12 +34,12 @@ impl FromComponentCommon<u16> for u8 {
 }
 impl FromComponentCommon<u16> for f32 {
     fn from_component_common(int: u16) -> Self {
-        (int as f32 / u16::MAX as f32).clamp(0.0, 1.0)
+        (f32::from(int) / f32::from(u16::MAX)).clamp(0.0, 1.0)
     }
 }
 impl FromComponentCommon<u8> for f32 {
     fn from_component_common(int: u8) -> Self {
-        (int as f32 / u8::MAX as f32).clamp(0.0, 1.0)
+        (f32::from(int) / f32::from(u8::MAX)).clamp(0.0, 1.0)
     }
 }
 impl FromComponentCommon<u8> for u16 {
