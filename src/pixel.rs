@@ -15,7 +15,7 @@ impl<T> PixelComponent for T where T: Copy + Bounded + Num + NumCast + PartialOr
 ///
 /// Component = An element of a pixel, inclusive of alpha. For example, [`Rgba`](crate::Rgba) is a pixel made up
 /// of four components, three color components and one alpha component.
-pub trait Pixel {
+pub trait Pixel: Copy {
     /// The component type of the pixel used for both color and alpha components if any.
     type Component: PixelComponent;
 
