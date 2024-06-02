@@ -1,11 +1,11 @@
-use num_traits::Bounded;
+use num_traits::{Bounded, Num, NumCast};
 
 /// A trait for all the required super-traits for a pixel component type.
 ///
 /// It has a blanket implementation so you just need to make sure your type implements the
 /// super-traits.
-pub trait PixelComponent: Copy + Bounded {}
-impl<T> PixelComponent for T where T: Copy + Bounded {}
+pub trait PixelComponent: Copy + Bounded + Num + NumCast + PartialOrd<Self> {}
+impl<T> PixelComponent for T where T: Copy + Bounded + Num + NumCast + PartialOrd<Self> {}
 
 /// A Pixel made up of a compile-time known number of contiguously stored `T`s.
 ///

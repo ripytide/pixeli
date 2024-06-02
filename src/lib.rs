@@ -16,7 +16,6 @@ mod rgb;
 mod rgba;
 
 mod from;
-mod from_component_common;
 mod from_pixel_common;
 mod pixel;
 mod with_alpha;
@@ -30,7 +29,6 @@ pub use gray_alpha::GrayAlpha;
 pub use rgb::Rgb;
 pub use rgba::Rgba;
 
-pub use from_component_common::FromComponentCommon;
 pub use from_pixel_common::FromPixelCommon;
 pub use pixel::{Pixel, PixelComponent};
 pub use with_alpha::{WithAlpha, WithoutAlpha};
