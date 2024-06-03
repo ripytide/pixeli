@@ -6,7 +6,7 @@ use self::{
 };
 
 pub mod enlargeable;
-mod from_component_common;
+pub mod from_component_common;
 mod to_gray;
 mod to_rgb;
 
