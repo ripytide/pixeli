@@ -28,12 +28,12 @@ pub trait Pixel: Copy {
     //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
     //
     /// The component array form of `Self`
-    type ComponentArray<R>;
+    type ComponentArray<R>: IntoIterator<Item = R>;
     //TODO if const generic expressions become stable remove this associated type and just use
     //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
     //
     /// The color array form of `Self`
-    type ColorArray<R>;
+    type ColorArray<R>: IntoIterator<Item = R>;
 
     /// Converts an owned `Pixel` type to an array of its components.
     fn component_array(&self) -> Self::ComponentArray<Self::Component>;
