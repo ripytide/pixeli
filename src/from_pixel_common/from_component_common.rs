@@ -1,5 +1,4 @@
-/// Convert between pixel component types using common component ranges such as using the 0-1 range
-/// for `f32`.
+/// Convert between pixel component types using common component ranges.
 pub trait FromComponentCommon<T> {
     /// Converts to this type from the input component type.
     fn from_component_common(component: T) -> Self;
@@ -46,6 +45,17 @@ macro_rules! integer_integer {
     };
 }
 
+impl FromComponentCommon<f32> for f64 {
+    fn from_component_common(component: f32) -> Self {
+        component as f64
+    }
+}
+impl FromComponentCommon<f64> for f32 {
+    fn from_component_common(component: f64) -> Self {
+        component as f32
+    }
+}
+
 float_integer!(f32, u8);
 float_integer!(f32, u16);
 float_integer!(f32, u32);
@@ -72,7 +82,23 @@ float_integer!(f64, i128);
 float_integer!(f64, usize);
 float_integer!(f64, isize);
 
-integer_integer!(u8, u16);
+impl FromComponentCommon<u8> for u16 {
+    fn from_component_common(component: u8) -> Self {
+        let x = u16::from(component);
+        (x << 8) | x
+    }
+}
+impl FromComponentCommon<u16> for u8 {
+    fn from_component_common(component: u16) -> Self {
+        // The input c is the numerator of `c / u16::MAX`.
+        // Derive numerator of `num / u8::MAX`, with rounding.
+        //
+        // This method is based on the inverse (see FromPrimitive<u8> for u16) and was tested
+        // exhaustively in Python. It's the same as the reference function:
+        //  round(c * (2**8 - 1) / (2**16 - 1))
+        ((u32::from(component) + 128) / 257) as u8
+    }
+}
 integer_integer!(u8, u32);
 integer_integer!(u8, u64);
 integer_integer!(u8, u128);
