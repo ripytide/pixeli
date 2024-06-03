@@ -24,8 +24,14 @@ pub trait Pixel: Copy {
 
     /// The same pixel type as `Self` but with a different component type `U`
     type SelfType<U: PixelComponent>: Pixel<Component = U, SelfType<Self::Component> = Self>;
+    //TODO if const generic expressions become stable remove this associated type and just use
+    //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
+    //
     /// The component array form of `Self`
     type ComponentArray<R>;
+    //TODO if const generic expressions become stable remove this associated type and just use
+    //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
+    //
     /// The color array form of `Self`
     type ColorArray<R>;
 
