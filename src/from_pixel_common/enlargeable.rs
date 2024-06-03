@@ -25,41 +25,27 @@ pub trait Enlargeable: PixelComponent {
     }
 }
 
-impl Enlargeable for u8 {
-    type Larger = u32;
+macro_rules! implement_enlargeable {
+    ($base:ident, $larger:ident) => {
+        impl Enlargeable for $base {
+            type Larger = $larger;
+        }
+    };
 }
-impl Enlargeable for u16 {
-    type Larger = u32;
-}
-impl Enlargeable for u32 {
-    type Larger = u64;
-}
-impl Enlargeable for u64 {
-    type Larger = u128;
-}
-impl Enlargeable for usize {
-    // Note: On 32-bit architectures, u64 should be enough here.
-    type Larger = u128;
-}
-impl Enlargeable for i8 {
-    type Larger = i32;
-}
-impl Enlargeable for i16 {
-    type Larger = i32;
-}
-impl Enlargeable for i32 {
-    type Larger = i64;
-}
-impl Enlargeable for i64 {
-    type Larger = i128;
-}
-impl Enlargeable for isize {
-    // Note: On 32-bit architectures, i64 should be enough here.
-    type Larger = i128;
-}
-impl Enlargeable for f32 {
-    type Larger = f64;
-}
-impl Enlargeable for f64 {
-    type Larger = f64;
-}
+
+implement_enlargeable!(u8, u16);
+implement_enlargeable!(u16, u32);
+implement_enlargeable!(u32, u64);
+implement_enlargeable!(u64, u128);
+// Note: On 32-bit architectures, u64 should be enough here.
+implement_enlargeable!(usize, u128);
+
+implement_enlargeable!(i8, i16);
+implement_enlargeable!(i16, i32);
+implement_enlargeable!(i32, i64);
+implement_enlargeable!(i64, i128);
+// Note: On 32-bit architectures, i64 should be enough here.
+implement_enlargeable!(isize, i128);
+
+implement_enlargeable!(f32, f64);
+implement_enlargeable!(f64, f64);
