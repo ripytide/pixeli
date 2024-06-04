@@ -31,5 +31,7 @@ pub use rgba::Rgba;
 pub use from_pixel_common::{
     enlargeable::Enlargeable, from_component_common::FromComponentCommon, FromPixelCommon,
 };
-pub use pixel::{contiguous_pixel::ContiguousPixel, pixel_component::PixelComponent, Pixel};
+pub use pixel::{
+    as_slice::AsSlice, contiguous_pixel::ContiguousPixel, pixel_component::PixelComponent, Pixel,
+};
 pub use with_alpha::{WithAlpha, WithoutAlpha};

@@ -1,5 +1,7 @@
-use self::pixel_component::PixelComponent;
+use crate::AsSlice;
+use crate::PixelComponent;
 
+pub mod as_slice;
 pub mod contiguous_pixel;
 pub mod pixel_component;
 
@@ -28,12 +30,12 @@ pub trait Pixel: Copy {
     //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
     //
     /// The component array form of `Self`
-    type ComponentArray<R>: IntoIterator<Item = R>;
+    type ComponentArray<R>: IntoIterator<Item = R> + AsSlice<R>;
     //TODO if const generic expressions become stable remove this associated type and just use
     //`[Self::Component; Self::COMPONENT_COUNT]` as the return type.
     //
     /// The color array form of `Self`
-    type ColorArray<R>: IntoIterator<Item = R>;
+    type ColorArray<R>: IntoIterator<Item = R> + AsSlice<R>;
 
     /// Converts an owned `Pixel` type to an array of its components.
     fn component_array(&self) -> Self::ComponentArray<Self::Component>;
