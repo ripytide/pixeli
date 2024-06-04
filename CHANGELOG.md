@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased - ReleaseDate
 
+### Added
+
+- Added `as_mut_slice()` method to the `AsSlice` trait.
+
 ## 0.2.0 - 2024-06-04
 
 ### Added
