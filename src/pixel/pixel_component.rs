@@ -1,7 +1,7 @@
-use num_traits::{Num, NumCast};
+use num_traits::{Num, NumAssign, NumCast, NumOps};
 
 /// A trait for all the required super-traits for a pixel component type.
-pub trait PixelComponent: Copy + Num + NumCast + PartialOrd<Self> {
+pub trait PixelComponent: Copy + Num + NumCast + NumAssign + NumOps + PartialOrd<Self> {
     /// The minimum component value
     const COMPONENT_MIN: Self;
     /// The maximum component value
