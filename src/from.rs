@@ -1,6 +1,6 @@
 use crate::*;
 
-macro_rules! implement_from {
+macro_rules! between {
     ($from_type:ident, $self_type:ident, {$($bit:ident),*}) => {
         impl<R, S> From<$from_type<R>> for $self_type<S> where R: Into<S> {
             fn from(value: $from_type<R>) -> Self {
@@ -10,32 +10,57 @@ macro_rules! implement_from {
     };
 }
 
-implement_from!(Rgba, Rgb, {r, g, b});
-implement_from!(Argb, Rgb, {r, g, b});
-implement_from!(Bgra, Rgb, {r, g, b});
-implement_from!(Abgr, Rgb, {r, g, b});
-implement_from!(Bgr, Rgb, {r, g, b});
+between!(Rgba, Rgb, {r, g, b});
+between!(Argb, Rgb, {r, g, b});
+between!(Bgra, Rgb, {r, g, b});
+between!(Abgr, Rgb, {r, g, b});
+between!(Bgr, Rgb, {r, g, b});
 
-implement_from!(Rgba, Bgr, {r, g, b});
-implement_from!(Argb, Bgr, {r, g, b});
-implement_from!(Bgra, Bgr, {r, g, b});
-implement_from!(Abgr, Bgr, {r, g, b});
-implement_from!(Rgb, Bgr, {r, g, b});
+between!(Rgba, Bgr, {r, g, b});
+between!(Argb, Bgr, {r, g, b});
+between!(Bgra, Bgr, {r, g, b});
+between!(Abgr, Bgr, {r, g, b});
+between!(Rgb, Bgr, {r, g, b});
 
-implement_from!(Argb, Rgba, {r, g, b, a});
-implement_from!(Bgra, Rgba, {r, g, b, a});
-implement_from!(Abgr, Rgba, {r, g, b, a});
+between!(Argb, Rgba, {r, g, b, a});
+between!(Bgra, Rgba, {r, g, b, a});
+between!(Abgr, Rgba, {r, g, b, a});
 
-implement_from!(Rgba, Argb, {r, g, b, a});
-implement_from!(Bgra, Argb, {r, g, b, a});
-implement_from!(Abgr, Argb, {r, g, b, a});
+between!(Rgba, Argb, {r, g, b, a});
+between!(Bgra, Argb, {r, g, b, a});
+between!(Abgr, Argb, {r, g, b, a});
 
-implement_from!(Rgba, Bgra, {r, g, b, a});
-implement_from!(Argb, Bgra, {r, g, b, a});
-implement_from!(Abgr, Bgra, {r, g, b, a});
+between!(Rgba, Bgra, {r, g, b, a});
+between!(Argb, Bgra, {r, g, b, a});
+between!(Abgr, Bgra, {r, g, b, a});
 
-implement_from!(Rgba, Abgr, {r, g, b, a});
-implement_from!(Argb, Abgr, {r, g, b, a});
-implement_from!(Bgra, Abgr, {r, g, b, a});
+between!(Rgba, Abgr, {r, g, b, a});
+between!(Argb, Abgr, {r, g, b, a});
+between!(Bgra, Abgr, {r, g, b, a});
 
-implement_from!(GrayAlpha, Gray, { gray });
+between!(GrayAlpha, Gray, { gray });
+
+macro_rules! with_array {
+    ($type:ident, $length:literal, [$($bit:ident),*]) => {
+        impl<R, S> From<$type<R>> for [S; $length] where R: Into<S> {
+            fn from(value: $type<R>) -> Self {
+                [$(value.$bit.into()),*]
+            }
+        }
+        impl<R, S> From<[R; $length]> for $type<S> where R: Into<S> {
+            fn from(value: [R; $length]) -> Self {
+                let mut iter = value.into_iter();
+                Self{$($bit: iter.next().unwrap().into()),*}
+            }
+        }
+    };
+}
+
+with_array!(Rgb, 3, [r, g, b]);
+with_array!(Bgr, 3, [b, g, r]);
+with_array!(Rgba, 4, [r, g, b, a]);
+with_array!(Argb, 4, [a, r, g, b]);
+with_array!(Bgra, 4, [b, g, r, a]);
+with_array!(Abgr, 4, [a, b, g, r]);
+with_array!(Gray, 1, [gray]);
+with_array!(GrayAlpha, 2, [gray, a]);
