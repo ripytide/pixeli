@@ -9,6 +9,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased - ReleaseDate
 
+### Added
+
+- Added `AsSlice`, `ContiguousPixel`, `Enlargeable`, `FromPixelCommon`,
+  `FromComponentCommon`, `PixelComponent`, `WithAlpha`, `WithoutAlpha`
+  traits.
+
+### Changed
+
+- Much improved `Pixel` trait and associated types.
+
+### Removed
+
+- The `Gbr` pixel type
+
 ## 0.1.0 - 2024-06-01
 
 ### Added
