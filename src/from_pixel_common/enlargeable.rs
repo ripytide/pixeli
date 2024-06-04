@@ -33,14 +33,16 @@ macro_rules! implement_enlargeable {
     };
 }
 
-implement_enlargeable!(u8, u16);
+//u16 is not large enough for the ToGray conversion so we use u32 instead
+implement_enlargeable!(u8, u32);
 implement_enlargeable!(u16, u32);
 implement_enlargeable!(u32, u64);
 implement_enlargeable!(u64, u128);
 // Note: On 32-bit architectures, u64 should be enough here.
 implement_enlargeable!(usize, u128);
 
-implement_enlargeable!(i8, i16);
+//i16 is not large enough for the ToGray conversion so we use i32 instead
+implement_enlargeable!(i8, i32);
 implement_enlargeable!(i16, i32);
 implement_enlargeable!(i32, i64);
 implement_enlargeable!(i64, i128);
