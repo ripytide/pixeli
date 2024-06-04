@@ -1,6 +1,6 @@
 [package]
 name = "pixeli"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["James Forster <james.forsterer@gmail.com>"]
 edition = "2021"
 description = """
@@ -12,8 +12,8 @@ readme = "README.md"
 homepage = "https://github.com/ripytide/pixeli"
 repository = "https://github.com/ripytide/pixeli"
 license = "MIT"
-keywords = ["pixel", "pixels"]
-categories = ["imageprocessing"]
+keywords = ["pixel", "image", "image-processing"]
+categories = ["pixel", "image", "image-processing"]
 
 [dependencies]
 num-traits = { version = "0.2.19", default-features = false }
